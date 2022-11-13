@@ -22,10 +22,10 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
 
     if surf_name in f.keys():
         Z = np.array(f[surf_name][:])
-    elif surf_name == 'train_err' or surf_name == 'test_err' :
+    elif surf_name == 'train_err' or surf_name == 'test_err':
         Z = 100 - np.array(f[surf_name][:])
     else:
-        print ('%s is not found in %s' % (surf_name, surf_file))
+        print('%s is not found in %s' % (surf_name, surf_file))
 
     print('------------------------------------------------------------------')
     print('plot_2d_contour')
@@ -45,14 +45,14 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
     fig = plt.figure()
     CS = plt.contour(X, Y, Z, cmap='summer', levels=np.arange(vmin, vmax, vlevel))
     plt.clabel(CS, inline=1, fontsize=8)
-    fig.savefig(surf_file + '_' + surf_name + '_2dcontour' + '.pdf', dpi=300,
-                bbox_inches='tight', format='pdf')
+    fig.savefig(surf_file + '_' + surf_name + '_2dcontour' + '.svg', dpi=300,
+                bbox_inches='tight', format='svg')
 
     fig = plt.figure()
-    print(surf_file + '_' + surf_name + '_2dcontourf' + '.pdf')
+    print(surf_file + '_' + surf_name + '_2dcontourf' + '.svg')
     CS = plt.contourf(X, Y, Z, cmap='summer', levels=np.arange(vmin, vmax, vlevel))
-    fig.savefig(surf_file + '_' + surf_name + '_2dcontourf' + '.pdf', dpi=300,
-                bbox_inches='tight', format='pdf')
+    fig.savefig(surf_file + '_' + surf_name + '_2dcontourf' + '.svg', dpi=300,
+                bbox_inches='tight', format='svg')
 
     # --------------------------------------------------------------------
     # Plot 2D heatmaps
@@ -61,18 +61,17 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
     sns_plot = sns.heatmap(Z, cmap='viridis', cbar=True, vmin=vmin, vmax=vmax,
                            xticklabels=False, yticklabels=False)
     sns_plot.invert_yaxis()
-    sns_plot.get_figure().savefig(surf_file + '_' + surf_name + '_2dheat.pdf',
-                                  dpi=300, bbox_inches='tight', format='pdf')
+    sns_plot.get_figure().savefig(surf_file + '_' + surf_name + '_2dheat.svg',
+                                  dpi=300, bbox_inches='tight', format='svg')
 
     # --------------------------------------------------------------------
     # Plot 3D surface
     # --------------------------------------------------------------------
     fig = plt.figure()
-    ax = Axes3D(fig)
+    ax = plt.axes(projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
-    fig.savefig(surf_file + '_' + surf_name + '_3dsurface.pdf', dpi=300,
-                bbox_inches='tight', format='pdf')
+    fig.savefig(surf_file + '_' + surf_name + '_3dsurface.svg', dpi=300, bbox_inches='tight', format='svg')
 
     f.close()
     if show: plt.show()
@@ -90,12 +89,12 @@ def plot_trajectory(proj_file, dir_file, show=False):
     f.close()
 
     if exists(dir_file):
-        f2 = h5py.File(dir_file,'r')
+        f2 = h5py.File(dir_file, 'r')
         if 'explained_variance_ratio_' in f2.keys():
             ratio_x = f2['explained_variance_ratio_'][0]
             ratio_y = f2['explained_variance_ratio_'][1]
-            plt.xlabel('1st PC: %.2f %%' % (ratio_x*100), fontsize='xx-large')
-            plt.ylabel('2nd PC: %.2f %%' % (ratio_y*100), fontsize='xx-large')
+            plt.xlabel('1st PC: %.2f %%' % (ratio_x * 100), fontsize='xx-large')
+            plt.ylabel('2nd PC: %.2f %%' % (ratio_y * 100), fontsize='xx-large')
         f2.close()
 
     fig.savefig(proj_file + '.pdf', dpi=300, bbox_inches='tight', format='pdf')
@@ -109,7 +108,7 @@ def plot_contour_trajectory(surf_file, dir_file, proj_file, surf_name='loss_vals
     assert exists(surf_file) and exists(proj_file) and exists(dir_file)
 
     # plot contours
-    f = h5py.File(surf_file,'r')
+    f = h5py.File(surf_file, 'r')
     x = np.array(f['xcoordinates'][:])
     y = np.array(f['ycoordinates'][:])
     X, Y = np.meshgrid(x, y)
@@ -129,11 +128,11 @@ def plot_contour_trajectory(surf_file, dir_file, proj_file, surf_name='loss_vals
     #     plt.plot([pf['proj_xcoord'][e]], [pf['proj_ycoord'][e]], marker='.', color='r')
 
     # add PCA notes
-    df = h5py.File(dir_file,'r')
+    df = h5py.File(dir_file, 'r')
     ratio_x = df['explained_variance_ratio_'][0]
     ratio_y = df['explained_variance_ratio_'][1]
-    plt.xlabel('1st PC: %.2f %%' % (ratio_x*100), fontsize='xx-large')
-    plt.ylabel('2nd PC: %.2f %%' % (ratio_y*100), fontsize='xx-large')
+    plt.xlabel('1st PC: %.2f %%' % (ratio_x * 100), fontsize='xx-large')
+    plt.ylabel('2nd PC: %.2f %%' % (ratio_y * 100), fontsize='xx-large')
     df.close()
     plt.clabel(CS1, inline=1, fontsize=6)
     plt.clabel(CS2, inline=1, fontsize=6)
@@ -150,7 +149,7 @@ def plot_2d_eig_ratio(surf_file, val_1='min_eig', val_2='max_eig', show=False):
     print('plot_2d_eig_ratio')
     print('------------------------------------------------------------------')
     print("loading surface file: " + surf_file)
-    f = h5py.File(surf_file,'r')
+    f = h5py.File(surf_file, 'r')
     x = np.array(f['xcoordinates'][:])
     y = np.array(f['ycoordinates'][:])
     X, Y = np.meshgrid(x, y)
@@ -179,7 +178,6 @@ def plot_2d_eig_ratio(surf_file, val_1='min_eig', val_2='max_eig', show=False):
                                   dpi=300, bbox_inches='tight', format='pdf')
     f.close()
     if show: plt.show()
-
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@
 *.t7
 *.pth
 *.pdf
+.idea
 cifar10/plots/*.png
 cifar10/plots/*.h5
 cifar10/data/
